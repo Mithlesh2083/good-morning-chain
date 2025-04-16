@@ -1,0 +1,63 @@
+<script>
+    // Show first pop-up after page loads
+    window.onload = function () {
+        setTimeout(function () {
+            if (!localStorage.getItem("userName")) {
+                document.getElementById("popup").style.display = "block";
+            } else {
+                showMessageAfterReturn(); // Show saved name on reload
+            }
+        }, 1000);
+    };
+
+    // Show name input after closing first popup
+    function showNamePopup() {
+        document.getElementById("popup").style.display = "none";
+        setTimeout(function () {
+            document.getElementById("namePopup").style.display = "block";
+        }, 2000);
+    }
+
+    // On submit: Save name, show message, redirect
+    function redirectToInstagram() {
+        const name = document.getElementById("yourName").value.trim();
+        if (name) {
+            localStorage.setItem("userName", name); // Save to localStorage
+            alert(`Good Morning, ${name}! 🌞`); // Pop-up with name
+            window.location.href = `https://www.instagram.com/sochmatbashass?igsh=cGwwYzJiMXJneWsz&name=${encodeURIComponent(name)}`;
+        } else {
+            alert("Please enter your name.");
+        }
+    }
+
+    // Show message when user returns (with or without ?name=)
+    function showMessageAfterReturn() {
+        let fromName = new URLSearchParams(window.location.search).get('name');
+
+        if (!fromName) {
+            fromName = localStorage.getItem("userName");
+        }
+
+        if (fromName) {
+            document.getElementById("mainMessage").textContent = `Good Morning, ${fromName}!`;
+            document.getElementById("messageBox").textContent = `Your personalized message has been sent!`;
+        }
+    }
+
+    // Share on WhatsApp with name
+    function shareWhatsApp() {
+        const name = localStorage.getItem("userName");
+        if (name) {
+            const text = `🌞 Good Morning ${name}!\nHere’s your personalized message:\n${window.location.href}`;
+            const whatsappLink = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappLink, '_blank');
+        } else {
+            alert("Please enter your name first.");
+        }
+    }
+
+    // Show message if URL has ?name or name already saved
+    if (window.location.search.includes('name=') || localStorage.getItem("userName")) {
+        showMessageAfterReturn();
+    }
+</script>

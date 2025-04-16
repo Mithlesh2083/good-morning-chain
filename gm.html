@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Good Morning Chain</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #fdfbfb, #ebedee);
+            text-align: center;
+            padding-top: 80px;
+            position: relative;
+        }
+        h1 {
+            font-size: 42px;
+            color: #2d3436;
+        }
+        p {
+            font-size: 20px;
+            color: #636e72;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            border-radius: 6px;
+            border: 1px solid #b2bec3;
+        }
+        button {
+            background-color: #00b894;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        .whatsapp {
+            background-color: #25D366;
+        }
+
+        /* Pop-up styles */
+        #popup {
+            display: none;
+            background-color: #ffeb3b;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 30px;
+            color: #2d3436;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        /* Second Pop-up (name entry) */
+        #namePopup {
+            display: none;
+            background-color: #00b894;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 25px;
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        #messageBox {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #2d3436;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Message -->
+    <h1 id="mainMessage">Good Morning!</h1>
+
+    <!-- Pop-Up: Good Morning Message -->
+    <div id="popup">
+        <h2>Good Morning Ji, Ram Ram 🙏🙏</h2>
+        <button onclick="showNamePopup()">Okay</button>
+    </div>
+
+    <!-- Pop-Up: Enter Your Name -->
+    <div id="namePopup">
+        <h2>Enter Your Name:</h2>
+        <input type="text" id="yourName" placeholder="Enter your name" />
+        <button onclick="redirectToInstagram()">Submit</button>
+    </div>
+
+    <!-- Message Box for User -->
+    <div id="messageBox"></div>
+
+    <br>
+    <button class="whatsapp" onclick="shareWhatsApp()">📲 Share on WhatsApp</button>
+
+    <script>
+        // Function to show first pop-up after page loads
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById("popup").style.display = "block";
+            }, 1000); // Display after 1 second
+        };
+
+        // Function to show name input pop-up after clicking okay on first pop-up
+        function showNamePopup() {
+            document.getElementById("popup").style.display = "none"; // Hide first pop-up
+            setTimeout(function() {
+                document.getElementById("namePopup").style.display = "block"; // Show second pop-up
+            }, 2000); // Show after 2 seconds
+        }
+
+        // Function to redirect user to Instagram with name parameter
+        function redirectToInstagram() {
+            const name = document.getElementById("yourName").value.trim();
+            if (name) {
+                window.location.href = `https://www.instagram.com/sochmatbashass?igsh=cGwwYzJiMXJneWsz&name=${encodeURIComponent(name)}`;
+            } else {
+                alert("Please enter your name.");
+            }
+        }
+
+        // Function to display Good Morning message and the name entered by user
+        function showMessageAfterReturn() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromName = urlParams.get('name');
+            if (fromName) {
+                document.getElementById("mainMessage").textContent = `Good Morning, ${fromName}!`;
+                document.getElementById("messageBox").textContent = `Your personalized message has been sent!`;
+            }
+        }
+
+        // Function to share on WhatsApp
+        function shareWhatsApp() {
+            const fromName = document.getElementById("mainMessage").textContent.replace("Good Morning, ", "").replace("!", "");
+            if (fromName) {
+                const text = `🌞 Good Morning ${fromName}!\nHere’s your personalized message:\n${window.location.href}`;
+                const whatsappLink = `https://wa.me/?text=${encodeURIComponent(text)}`;
+                window.open(whatsappLink, '_blank');
+            } else {
+                alert("Please enter your name and return.");
+            }
+        }
+
+        // Check if user returned from Instagram and show message
+        if (window.location.search.includes('name=')) {
+            showMessageAfterReturn();
+        }
+    </script>
+
+</body>
+</html>
